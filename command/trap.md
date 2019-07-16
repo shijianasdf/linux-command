@@ -7,19 +7,19 @@ trap
 
 **trap命令** 用于指定在接收到信号后将要采取的动作，常见的用途是在脚本程序被中断时完成清理工作。当shell接收到sigspec指定的信号时，arg参数（命令）将会被读取，并被执行。例如：
 
-```
+```shell
 trap "exit 1" HUP INT PIPE QUIT TERM
 ```
 
 表示当shell收到HUP INT PIPE QUIT TERM这几个命令时，当前执行的程序会读取参数“exit 1”，并将它作为命令执行。
 
-### 语法  
+###  语法
 
-```
+```shell
 trap -[lp] [[arg] sigspec ...]
 ```
 
-### 选项参数说明  
+###  选项参数说明
 
 如果arg参数缺省或者为“-”，每个接收到的sigspec信号都将会被重置为它们进入shell时的值；
 
@@ -45,7 +45,7 @@ trap -[lp] [[arg] sigspec ...]
 
 在以上情况中如果sigspec是ERR，arg命令不会执行，这些规则同样适用于errexit选项。如果sigspec是RETURN，arg指定的命令在每次shell函数或者脚本用"."或者内置的命令执行完成后执行，在shell入口处被忽略的命令 是没法被trap和reset的，被trap的信号，在创建的子进程中使用时会在子进程被创建时被重置为原始的值。如果trap使用的sigspec信号 是invalid的信号则trap命令返回false（失败），否则返回成功（true）。
 
-### 信号  
+###  信号
 
 信号是一种进程间通信机制，它给应用程序提供一种异步的软件中断，使应用程序有机会接受其他程序活终端发送的命令(即信号)。应用程序收到信号后，有三种处理方式：忽略，默认，或捕捉。进程收到一个信号后，会检查对该信号的处理机制。如果是SIG_IGN，就忽略该信号；如果是SIG_DFT，则会采用系统默认的处理动作，通常是终止进程或忽略该信号；如果给该信号指定了一个处理函数(捕捉)，则会中断当前进程正在执行的任务，转而去执行该信号的处理函数，返回后再继续执行被中断的任务。
 
@@ -54,100 +54,57 @@ trap -[lp] [[arg] sigspec ...]
 以下是一些你可能会遇到的，要在程序中使用的更常见的信号：
 
 <table>
-
 <tbody>
-
 <tr>
-
 <th width="100">信号名称</th>
-
 <th width="60">信号数</th>
-
 <th>描述</th>
-
 </tr>
-
 <tr>
-
 <td>SIGHUP</td>
-
 <td>1</td>
-
 <td>本信号在用户终端连接(正常或非正常)结束时发出, 通常是在终端的控制进程结束时, 通知同一session内的各个作业, 这时它们与控制终端不再关联。 登录Linux时，系统会分配给登录用户一个终端(Session)。在这个终端运行的所有程序，包括前台进程组和后台进程组，一般都属于这个Session。当用户退出Linux登录时，前台进程组和后台有对终端输出的进程将会收到SIGHUP信号。这个信号的默认操作为终止进程，因此前台进程组和后台有终端输出的进程就会中止。对于与终端脱离关系的守护进程，这个信号用于通知它重新读取配置文件。</td>
-
 </tr>
-
 <tr>
-
 <td>SIGINT</td>
-
 <td>2</td>
-
 <td>程序终止(interrupt)信号, 在用户键入INTR字符(通常是Ctrl C)时发出。</td>
-
 </tr>
-
 <tr>
-
 <td>SIGQUIT</td>
-
 <td>3</td>
-
 <td>和SIGINT类似, 但由QUIT字符(通常是Ctrl /)来控制. 进程在因收到SIGQUIT退出时会产生core文件, 在这个意义上类似于一个程序错误信号。</td>
-
 </tr>
-
 <tr>
-
 <td>SIGFPE</td>
-
 <td>8</td>
-
 <td>在发生致命的算术运算错误时发出. 不仅包括浮点运算错误, 还包括溢出及除数为0等其它所有的算术的错误。</td>
-
 </tr>
-
 <tr>
-
 <td>SIGKILL</td>
-
 <td>9</td>
-
 <td>用来立即结束程序的运行. 本信号不能被阻塞, 处理和忽略。</td>
-
 </tr>
-
 <tr>
-
 <td>SIGALRM</td>
-
 <td>14</td>
-
 <td>时钟定时信号, 计算的是实际的时间或时钟时间. alarm函数使用该信号。</td>
-
 </tr>
-
 <tr>
-
 <td>SIGTERM</td>
-
 <td>15</td>
-
 <td>程序结束(terminate)信号, 与SIGKILL不同的是该信号可以被阻塞和处理. 通常用来要求程序自己正常退出. shell命令kill缺省产生这个信号。</td>
-
 </tr>
-
 </tbody>
-
 </table>
 
-### 捕获信号  
+###  捕获信号
 
 当你按下 Ctrl + C 键或 Break 键在终端一个shell程序的执行过程中，正常程序将立即终止，并返回命令提示符。这可能并不总是可取的。例如，你可能最终留下了一堆临时文件，将不会清理。
 
 捕获这些信号是很容易的，trap命令的语法如下：
 
-```
+```shell
 $ trap commands signals
 ```
 
@@ -162,7 +119,7 @@ $ trap commands signals
 
 trap命令作为一个例子，下面展示了如何可以删除一些文件，然后退出，如果有人试图从终端中止程序：
 
-```
+```shell
 trap "rm -f $WORKDIR/work1$ $WORKDIR/dataout$; exit" 2
 ```
 
@@ -174,7 +131,7 @@ trap "rm -f $WORKDIR/work1$ $WORKDIR/dataout$; exit" 2
 
 您可以修改前面的陷阱也删除指定的文件，在这种情况下，两个信号信号1号添加到列表：
 
-```
+```shell
 $ trap "rm $WORKDIR/work1$ $WORKDIR/dataout$; exit" 1 2
 ```
 
@@ -184,7 +141,7 @@ $ trap "rm $WORKDIR/work1$ $WORKDIR/dataout$; exit" 1 2
 
 WORKDIR 值 $$ 所以在前面的例子中，将被取代 trap 命令执行的时间。如果你想这种替代发生在收到信号1或2的时间你可以把单引号内的命令：
 
-```
+```shell
 $ trap 'rm $WORKDIR/work1$ $WORKDIR/dataout$; exit' 1 2
 ```
 
@@ -192,19 +149,19 @@ $ trap 'rm $WORKDIR/work1$ $WORKDIR/dataout$; exit' 1 2
 
 如果陷阱列出的命令是空的，指定的信号接收时，将被忽略。例如，下面的命令：
 
-```
+```shell
 $ trap '' 2
 ```
 
 指定的中断信号是被忽略的。你可能要忽略某些信号时进行一些操作，不希望打断。可以指定多个信号被忽略如下：
 
-```
+```shell
 $ trap '' 1 2 3 15
 ```
 
 注意，第一个参数必须被指定为一个信号被忽略，而不是相当于写入下面的内容，它具有独立的含义也各有：
 
-```
+```shell
 $ trap  2
 ```
 
@@ -214,7 +171,7 @@ $ trap  2
 
 当你改变了默认在收到信号后应采取的动作，你可以改变它回来的陷阱，如果你只是省略第一个参数;
 
-```
+```shell
 $ trap 1 2
 ```
 

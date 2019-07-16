@@ -1,7 +1,7 @@
 tar
 ===
 
-Linux下的归档使用工具，用来打包和备份。
+Linux下的归档使用工具，用来打包和备份
 
 ## 补充说明
 
@@ -13,36 +13,38 @@ Linux下的归档使用工具，用来打包和备份。
 
 ### 语法
 
-```
-tar(选项)(参数)
+```shell
+tar (选项) (参数)
 ```
 
 ### 选项
 
-```
+```shell
 -A或--catenate：新增文件到以存在的备份文件；
 -B：设置区块大小；
 -c或--create：建立新的备份文件；
--C <目录>：这个选项用在解压缩，若要在特定目录解压缩，可以使用这个选项。
+-C <目录>：这个选项用在解压缩，若要在特定目录解压缩，可以使用这个选项；
 -d：记录文件的差别；
--x或--extract或--get：从备份文件中还原文件；
+-x或--extract或--get：从归档文件中提取文件，可以搭配-C（大写）在特定目录解开，
+                     需要注意的是-c、-t、-x不可同时出现在一串命令中；
 -t或--list：列出备份文件的内容；
--z或--gzip或--ungzip：通过gzip指令处理备份文件；
+-z或--gzip或--ungzip：通过gzip指令压缩/解压缩文件，文件名最好为*.tar.gz；
 -Z或--compress或--uncompress：通过compress指令处理备份文件；
 -f<备份文件>或--file=<备份文件>：指定备份文件；
 -v或--verbose：显示指令执行过程；
 -r：添加文件到已经压缩的文件；
 -u：添加改变了和现有的文件到已经存在的压缩文件；
--j：支持bzip2解压文件；
+-j：通过bzip2指令压缩/解压缩文件，文件名最好为*.tar.bz2；
 -v：显示操作过程；
 -l：文件系统边界设置；
 -k：保留原有文件不覆盖；
 -m：保留文件不被覆盖；
 -w：确认压缩文件的正确性；
--p或--same-permissions：用原来的文件权限还原文件；
--P或--absolute-names：文件名使用绝对名称，不移除文件名称前的“/”号；
+-p或--same-permissions：保留原来的文件权限与属性；
+-P或--absolute-names：使用文件名的绝对路径，不移除文件名称前的“/”号；
 -N <日期格式> 或 --newer=<日期时间>：只将较指定日期更新的文件保存到备份文件里；
---exclude=<范本样式>：排除符合范本样式的文件。
+--exclude=<范本样式>：排除符合范本样式的文件；
+--remove-files：归档/压缩之后删除源文件
 ```
 
 ### 参数
@@ -51,7 +53,7 @@ tar(选项)(参数)
 
 ### 实例
 
-```bash
+```shell
 - z：有gzip属性的
 - j：有bz2属性的
 - Z：有compress属性的
@@ -63,7 +65,7 @@ tar(选项)(参数)
 
 -f: 使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。
 
-```bash
+```shell
 tar -cf all.tar *.jpg
 # 这条命令是将所有.jpg的文件打成一个名为all.tar的包。-c是表示产生新的包，-f指定包的文件名。
 
@@ -77,7 +79,7 @@ tar -tf all.tar
 # 这条命令是列出all.tar包中所有文件，-t是列出文件的意思
 ```
 
-```bash
+```shell
 tar -cfv archive.tar foo bar  # 从文件foo和bar创建archive.tar。
 tar -tvf archive.tar         # 详细列出archive.tar中的所有文件。
 tar -xf archive.tar          # 从archive.tar提取所有文件。
@@ -151,7 +153,7 @@ tar -xf archive.tar          # 从archive.tar提取所有文件。
 
 注：如果是打包的是Java类库，并且该类库中存在主类，那么需要写一个META-INF/MANIFEST.MF配置文件，内容如下：  
 
-```
+```shell
 Manifest-Version: 1.0
 Created-By: 1.6.0_27 (Sun Microsystems Inc.)
 Main-class: the_name_of_the_main_class_should_be_put_here
@@ -174,7 +176,7 @@ jar -cvfm [目标文件名].jar META-INF/MANIFEST.MF [原文件名/目录名]
 
 **将文件全部打包成tar包** ：
 
-```
+```shell
 tar -cvf log.tar log2012.log    仅打包，不压缩！
 tar -zcvf log.tar.gz log2012.log   打包后，以 gzip 压缩
 tar -jcvf log.tar.bz2 log2012.log  打包后，以 bzip2 压缩
@@ -187,13 +189,13 @@ tar -jcvf log.tar.bz2 log2012.log  打包后，以 bzip2 压缩
 
 去掉第一层目录结构，要出除第二层，--strip-components 2
 
-```bash
+```shell
 tar -xvf portal-web-v2.0.0.tar --strip-components 1  -C 指定目录
 ```
 
 **查阅上述tar包内有哪些文件** ：
 
-```
+```shell
 tar -ztvf log.tar.gz
 ```
 
@@ -201,7 +203,7 @@ tar -ztvf log.tar.gz
 
 **将tar包解压缩** ：
 
-```
+```shell
 tar -zxvf /opt/soft/test/log.tar.gz
 ```
 
@@ -209,7 +211,7 @@ tar -zxvf /opt/soft/test/log.tar.gz
 
 **只将tar内的部分文件解压出来** ：
 
-```
+```shell
 tar -zxvf /opt/soft/test/log30.tar.gz log2013.log
 ```
 
@@ -217,7 +219,7 @@ tar -zxvf /opt/soft/test/log30.tar.gz log2013.log
 
 **文件备份下来，并且保存其权限** ：
 
-```
+```shell
 tar -zcvpf log31.tar.gz log2014.log log2015.log log2016.log
 ```
 
@@ -225,19 +227,25 @@ tar -zcvpf log31.tar.gz log2014.log log2015.log log2016.log
 
 **在文件夹当中，比某个日期新的文件才备份** ：
 
-```
+```shell
 tar -N "2012/11/13" -zcvf log17.tar.gz test
 ```
 
 **备份文件夹内容是排除部分文件：**
 
-```
+```shell
 tar --exclude scf/service -zcvf scf.tar.gz scf/*
+```
+
+**打包文件之后删除源文件：**
+
+```shell
+tar -cvf test.tar test --remove-files
 ```
 
 **其实最简单的使用 tar 就只要记忆底下的方式即可：**
 
-```
+```shell
 压　缩：tar -jcv -f filename.tar.bz2 要被压缩的文件或目录名称
 查　询：tar -jtv -f filename.tar.bz2
 解压缩：tar -jxv -f filename.tar.bz2 -C 欲解压缩的目录
